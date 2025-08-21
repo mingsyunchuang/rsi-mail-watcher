@@ -1,0 +1,22 @@
+name: RSI Checker
+
+on:
+  schedule:
+    - cron: '0 1 * * *'   # 每天台灣09:00執行一次(UTC+8=9點)
+  workflow_dispatch:
+
+jobs:
+  rsi-job:
+    runs-on: ubuntu-latest
+    env:
+      GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: pip install yfinance
+      - name: Run script
+        run: python rsi_monitor.py
