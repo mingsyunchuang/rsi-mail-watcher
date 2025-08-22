@@ -1,4 +1,5 @@
 import yfinance as yf
+import pandas as pd
 import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
@@ -9,7 +10,19 @@ app_password = os.environ.get('GMAIL_APP_PASSWORD')
 stock_list = ["2330.TW", "0050.TW", "AAPL"]
 rsi_days = 14
 
-def get_rsi(symbol, days=14):
+def get_rsi(symbol, period=14):
+    data = yf.download(symbol, period='60d', interval='1d')
+    close = data['Close']
+    delta = close.diff()
+    gain = delta.where(delta > 0, 0)
+    loss = -delta.where(delta < 0, 0)
+    avg_gain = gain.rolling(window=period, min_periods=period).mean()
+    avg_loss = loss.rolling(window=period, min_periods=period).mean()
+    rs = avg_gain / avg_loss
+    rsi = 100 - (100 / (1 + rs))
+    return round(rsi[-1], 2)
+
+def get_rsi_old(symbol, days=14):
     data = yf.download(symbol, period=f'{days+30}d', interval='1d')
     if data.shape[0] < days + 1:
         return None
