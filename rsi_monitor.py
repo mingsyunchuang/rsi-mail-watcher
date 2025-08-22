@@ -6,6 +6,7 @@ import os
 import pandas as pd
 
 your_email = "mingsyunapp@gmail.com"
+cc_emails = ["mingsyun@hotmail.com"]
 app_password = os.environ.get('GMAIL_APP_PASSWORD')
 stock_list = ["1326.TW", "2904.TW", "2414", "2330.TW", "2317.TW", "2376.TW", "6216.TW", "0050.TW", "0056.TW", "00919.TW", "00875.TW","QQQ","SPY","VTI", "AAPL", "TSLA", "NVDA", "AMZN", "NFLX", "MSFT", "AAL", "T", "COST", "CELH","O"]
 rsi_days = 14
@@ -34,9 +35,12 @@ def get_indicators(symbol, rsi_period=14, bb_period=20, bb_std=2):
     return last_rsi, last_date, last_close, upper, lower
 
 def send_email(subject, body):
+    to_emails = [your_email]
+    all_recipients = to_emails + cc_emails
     msg = MIMEText(body, 'plain', 'utf-8')
     msg['From'] = your_email
-    msg['To'] = "mingsyun@hotmail.com"
+    msg['To'] = ', '.join(to_emails)
+    msg['Cc'] = ', '.join(cc_emails)
     msg['Subject'] = Header(subject, 'utf-8').encode()
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
         server.login(your_email, app_password)
