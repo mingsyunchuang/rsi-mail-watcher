@@ -15,7 +15,13 @@ def get_rsi_and_last_price(symbol, period=14):
     if close.empty:
         raise ValueError("無法取得收盤價資料")
     last_date = close.index[-1].strftime('%Y-%m-%d')
-    last_close = close.iloc[-1]
+    # 取出 float，避免 Series 顯示
+    close_value = close.iloc[-1]
+    # 若為Series需再取第一個
+    if isinstance(close_value, pd.Series):
+        last_close = float(close_value.values[0])
+    else:
+        last_close = float(close_value)
     delta = close.diff()
     gain = delta.clip(lower=0)
     loss = -delta.clip(upper=0)
@@ -24,7 +30,8 @@ def get_rsi_and_last_price(symbol, period=14):
     rs = avg_gain / avg_loss
     rsi = 100 - (100 / (1 + rs))
     last_rsi = float(rsi.dropna().values[-1])
-    return last_rsi, last_date, round(last_close, 2)
+    return last_rsi, last_date, last_close
+
 
 def send_email(subject, body):
     msg = MIMEText(body, 'plain', 'utf-8')
