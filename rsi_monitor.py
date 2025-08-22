@@ -4,6 +4,7 @@ from email.mime.text import MIMEText
 from email.header import Header
 import os
 import pandas as pd
+import math
 
 your_email = "mingsyunapp@gmail.com"
 app_password = os.environ.get('GMAIL_APP_PASSWORD')
@@ -27,6 +28,10 @@ def get_rsi_and_last_price(symbol, period=14):
     rs = avg_gain / avg_loss
     rsi = 100 - (100 / (1 + rs))
     last_rsi = rsi.iloc[-1]
+    if pd.isna(last_rsi):
+        last_rsi = float('nan')
+    else:
+        last_rsi = float(last_rsi)
     return last_rsi, last_date, round(last_close, 2)
 
 def send_email(subject, body):
@@ -42,7 +47,7 @@ content = ""
 for stock in stock_list:
     try:
         rsi_val, last_date, last_close = get_rsi_and_last_price(stock, rsi_days)
-        if (not pd.isna(rsi_val)) and (rsi_val > 30):
+        if (isinstance(rsi_val, float) or isinstance(rsi_val, int)) and (not math.isnan(rsi_val)) and (rsi_val > 30):
             content += f"{stock} 收盤日: {last_date} 收盤價: {last_close} RSI={rsi_val:.2f} 低於30\n"
     except Exception as e:
         content += f"{stock} 無法取得資料或計算錯誤: {e}\n"
