@@ -36,8 +36,7 @@ def get_indicators(symbol, rsi_period=14, bb_period=20, bb_std=2):
 def send_email(subject, body):
     msg = MIMEText(body, 'plain', 'utf-8')
     msg['From'] = your_email
-    msg['To'] = your_email.join(to_emails)
-    msg['Cc'] = "mingsyun@hotmail.com".join(to_emails)
+    msg['To'] = [your_email , "mingsyun@hotmail.com"]
     msg['Subject'] = Header(subject, 'utf-8').encode()
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
         server.login(your_email, app_password)
