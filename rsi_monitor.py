@@ -36,7 +36,7 @@ def send_email(subject, body):
 content = ""
 for stock in stock_list:
     rsi_val = get_rsi(stock, rsi_days)
-    if rsi_val is not None and not rsi_val.empty and rsi_val.iloc[-1] < 30:
+    if rsi_val is not None and not rsi_val.empty and rsi_val.iloc[-1] > 30:
         content += f"{stock} RSI={rsi_val:.2f} 低於30\n"
 
 if content:
