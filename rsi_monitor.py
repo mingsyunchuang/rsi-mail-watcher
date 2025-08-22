@@ -3,8 +3,9 @@ import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
 import os
+import pandas as pd
 
-your_email = "mingsyunapp@gmail.com"
+your_email = "你的Gmail信箱"
 app_password = os.environ.get('GMAIL_APP_PASSWORD')
 stock_list = ["2330.TW", "0050.TW", "AAPL"]
 rsi_days = 14
@@ -12,6 +13,8 @@ rsi_days = 14
 def get_rsi_and_last_price(symbol, period=14):
     data = yf.download(symbol, period='60d', interval='1d')
     close = data['Close']
+    if close.dropna().empty:
+        raise ValueError("無法取得收盤價資料")
     # 取得最新一日
     last_date = close.dropna().index[-1].strftime('%Y-%m-%d')
     last_close = close.dropna().iloc[-1]
@@ -23,7 +26,7 @@ def get_rsi_and_last_price(symbol, period=14):
     avg_loss = loss.rolling(window=period, min_periods=period).mean()
     rs = avg_gain / avg_loss
     rsi = 100 - (100 / (1 + rs))
-    last_rsi = round(rsi.iloc[-1], 2)
+    last_rsi = rsi.iloc[-1]
     return last_rsi, last_date, round(last_close, 2)
 
 def send_email(subject, body):
@@ -39,7 +42,7 @@ content = ""
 for stock in stock_list:
     try:
         rsi_val, last_date, last_close = get_rsi_and_last_price(stock, rsi_days)
-        if rsi_val < 30:
+        if (not pd.isna(rsi_val)) and (rsi_val > 30):
             content += f"{stock} 收盤日: {last_date} 收盤價: {last_close} RSI={rsi_val:.2f} 低於30\n"
     except Exception as e:
         content += f"{stock} 無法取得資料或計算錯誤: {e}\n"
