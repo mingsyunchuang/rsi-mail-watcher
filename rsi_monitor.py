@@ -7,7 +7,7 @@ import pandas as pd
 
 your_email = "mingsyunapp@gmail.com"
 app_password = os.environ.get('GMAIL_APP_PASSWORD')
-stock_list = ["2330.TW", "0050.TW", "AAPL"]
+stock_list = ["1326.TW", "2904.TW", "2414", "2330.TW", "2317.TW", "2376.TW", "6216.TW", "0050.TW", "0056.TW", "00919.TW", "00875.TW","QQQ","SPY","VTI", "AAPL", "TSLA", "NVDA", "AMZN", "NFLX", "MSFT", "AAL", "T", "COST", "CELH","O"]
 rsi_days = 14
 
 def get_indicators(symbol, rsi_period=14, bb_period=20, bb_std=2):
