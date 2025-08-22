@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 from email.header import Header
 import os
 
-your_email = "mingsyunApp@gmail.com"
+your_email = "mingsyunapp@gmail.com"
 app_password = os.environ.get('GMAIL_APP_PASSWORD')
 stock_list = ["2330.TW", "0050.TW", "AAPL"]
 rsi_days = 14
@@ -27,6 +27,7 @@ def send_email(subject, body):
     msg = MIMEText(body, 'plain', 'utf-8')
     msg['From'] = your_email
     msg['To'] = your_email
+    msg['Cc'] = "mingsyun@hotmail.com"
     msg['Subject'] = Header(subject, 'utf-8').encode()
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
         server.login(your_email, app_password)
