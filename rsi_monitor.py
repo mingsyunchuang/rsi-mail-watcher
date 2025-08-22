@@ -18,20 +18,24 @@ rsi_days = 14
 
 def get_indicators(symbol, rsi_period=14, bb_period=20, bb_std=2):
     data = yf.download(symbol, period='60d', interval='1d')
-    close = data['Close'].dropna()
+    # 防止多層DataFrame，取正確symbol資料
+    if isinstance(data['Close'], pd.DataFrame):
+        close = data['Close'][symbol].dropna()
+    else:
+        close = data['Close'].dropna()
     if close.empty:
         raise ValueError("無法取得收盤價資料")
     last_date = close.index[-1].strftime('%Y-%m-%d')
     last_close = float(close.iloc[-1])
-    # RSI with TA (與TradingView一致)
+    from ta.momentum import RSIIndicator
     rsi = RSIIndicator(close, window=rsi_period).rsi()
     last_rsi = float(rsi.dropna().values[-1])
-    # Bollinger Bands
     ma = close.rolling(window=bb_period).mean()
     std = close.rolling(window=bb_period).std()
     upper = float(ma.iloc[-1] + bb_std * std.iloc[-1])
     lower = float(ma.iloc[-1] - bb_std * std.iloc[-1])
     return last_rsi, last_date, last_close, upper, lower
+
 
 def send_email(subject, body):
     to_emails = [your_email]
