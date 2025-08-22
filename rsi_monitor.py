@@ -5,7 +5,7 @@ from email.header import Header
 import os
 import pandas as pd
 
-your_email = "你的Gmail信箱"
+your_email = "mingsyunapp@gmail.com"
 app_password = os.environ.get('GMAIL_APP_PASSWORD')
 stock_list = ["2330.TW", "0050.TW", "AAPL"]
 rsi_days = 14
