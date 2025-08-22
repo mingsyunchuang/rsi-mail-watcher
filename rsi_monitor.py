@@ -48,7 +48,7 @@ for stock in stock_list:
     try:
         rsi_val, last_date, last_close = get_rsi_and_last_price(stock, rsi_days)
         if rsi_val > 30:
-            content += f"{stock} 收盤日: {last_date} 收盤價: {last_close} RSI={rsi_val:.2f} 低於30\n"
+            content += f"{stock} 收盤日: {last_date} 收盤價: {last_close:.2f} RSI={rsi_val:.2f} 低於30\n"
     except Exception as e:
         content += f"{stock} 無法取得資料或計算錯誤: {e}\n"
 
