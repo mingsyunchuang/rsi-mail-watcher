@@ -44,7 +44,7 @@ def send_email(subject, body):
     msg['Subject'] = Header(subject, 'utf-8').encode()
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
         server.login(your_email, app_password)
-        server.sendmail(your_email, [your_email], msg.as_string())
+        server.sendmail(your_email, all_recipients, msg.as_string())
 
 content = ""
 for stock in stock_list:
