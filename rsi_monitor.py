@@ -55,13 +55,13 @@ for stock in stock_list:
         rsi_val, last_date, last_close, bb_upper, bb_lower = get_indicators(stock, rsi_days)
         message = f"{stock} 收盤日: {last_date} 收盤價: {last_close:.2f} "
         # 僅當RSI 低於30觸發
-        if rsi_val > 40:
+        if rsi_val <= 40:
             content += f"{message}RSI={rsi_val:.2f} 低於30\n"
         # 僅當收盤價低於布林下軌
-        if last_close > bb_lower:
+        if last_close <= bb_lower:
             content += f"{message}低於布林下軌({bb_lower:.2f})\n"
         # 僅當收盤價高於布林上軌
-        if last_close < bb_upper:
+        if last_close >= bb_upper:
             content += f"{message}高於布林上軌({bb_upper:.2f})\n"
     except Exception as e:
         content += f"{stock} 無法取得資料或計算錯誤: {e}\n"
