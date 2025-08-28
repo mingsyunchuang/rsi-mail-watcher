@@ -56,7 +56,7 @@ for stock in stock_list:
         message = f"{stock} 收盤日: {last_date} 收盤價: {last_close:.2f} "
         # 僅當RSI 低於30觸發
         if rsi_val <= 40:
-            content += f"{message}RSI={rsi_val:.2f} 低於30\n"
+            content += f"{message}RSI={rsi_val:.2f} 低於40\n"
         # 僅當收盤價低於布林下軌
         if last_close <= bb_lower:
             content += f"{message}低於布林下軌({bb_lower:.2f})\n"
