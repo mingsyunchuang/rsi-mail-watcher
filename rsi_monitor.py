@@ -35,6 +35,8 @@ stock_targets = [
     ("00875.TW", "國泰網路資安"),
     ("009802.TW","富邦旗艦50"),
     ("00942B.TW","台新美A公司債"),
+    ("2308.TW", "台達電_無"),
+    ("1295.TW", "生合生技_益生菌.增肌減脂"),
     ("AAL", "American Airlines"),
     ("AAPL", "Apple"),
     ("AMZN", "Amazon"),
@@ -50,7 +52,9 @@ stock_targets = [
     ("ZIM", "乙星航運"),
     ("VTI", "Vanguard Total Stock Mkt"),
     ("MSFT", "Microsoft"),
-    ("COST", "Costco")
+    ("COST", "Costco"),
+    ("WRD", "中國廣東.文遠知行.自動駕駛技術開發"),
+    ("QS", "QuantumScape.開發新型固態鋰金屬電池")
 ]
 rsi_days = 14
 
