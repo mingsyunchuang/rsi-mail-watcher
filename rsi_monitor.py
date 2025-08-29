@@ -76,7 +76,7 @@ def get_indicators(symbol, rsi_period=14, bb_period=20, bb_std=2):
     lower = float(ma.iloc[-1] - bb_std * std.iloc[-1])
     return last_rsi, last_date, last_close, upper, lower
 
-def send_email(subject, body):
+def send_email_Text(subject, body):
     to_emails = [your_email]
     all_recipients = to_emails + cc_emails
     msg = MIMEText(body, 'plain', 'utf-8')
@@ -88,21 +88,55 @@ def send_email(subject, body):
         server.login(your_email, app_password)
         server.sendmail(your_email, all_recipients, msg.as_string())
 
-content = ""
+def send_email(subject, body_html):
+    to_emails = [your_email]
+    all_recipients = to_emails + cc_emails
+    msg = MIMEText(body_html, 'html', 'utf-8')  # 指定 html 模式
+    msg['From'] = your_email
+    msg['To'] = ', '.join(to_emails)
+    msg['Cc'] = ', '.join(cc_emails)
+    msg['Subject'] = Header(subject, 'utf-8').encode()
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+        server.login(your_email, app_password)
+        server.sendmail(your_email, all_recipients, msg.as_string())
+
+######for TEXT mail
+#content = ""
+#for stock, stock_name in stock_targets:
+#    try:
+#        rsi_val, last_date, last_close, bb_upper, bb_lower = get_indicators(stock, rsi_days)
+#        stock_display = f"{stock} ({stock_name})"
+#        message = f"{stock_display} 收盤日: {last_date} 收盤價: {last_close:.2f} "
+#        if rsi_val <= 40:
+#            content += f"{message}RSI={rsi_val:.2f} 低於40\n"
+#        if last_close <= bb_lower:
+#            content += f"{message}低於布林下軌({bb_lower:.2f})\n"
+#        if last_close >= bb_upper:
+#            content += f"{message}高於布林上軌({bb_upper:.2f})\n"
+#    except Exception as e:
+#        stock_display = f"{stock} ({stock_name})"
+#        content += f"{stock_display} 無法取得資料或計算錯誤: {e}\n"
+
+#if content:
+#    send_email("RSI/布林警報", content)
+
+content_html = ""
 for stock, stock_name in stock_targets:
     try:
         rsi_val, last_date, last_close, bb_upper, bb_lower = get_indicators(stock, rsi_days)
         stock_display = f"{stock} ({stock_name})"
         message = f"{stock_display} 收盤日: {last_date} 收盤價: {last_close:.2f} "
         if rsi_val <= 40:
-            content += f"{message}RSI={rsi_val:.2f} 低於40\n"
+            content_html += f'{message}RSI={rsi_val:.2f} <span style="color:red;">低於40</span><br>'
         if last_close <= bb_lower:
-            content += f"{message}低於布林下軌({bb_lower:.2f})\n"
+            content_html += f'{message}<span style="color:red;">低於布林下軌({bb_lower:.2f})</span><br>'
         if last_close >= bb_upper:
-            content += f"{message}高於布林上軌({bb_upper:.2f})\n"
+            content_html += f'{message}<span style="color:green;">高於布林上軌({bb_upper:.2f})</span><br>'
     except Exception as e:
         stock_display = f"{stock} ({stock_name})"
-        content += f"{stock_display} 無法取得資料或計算錯誤: {e}\n"
+        content_html += f'{stock_display} <span style="color:red;">無法取得資料或計算錯誤: {e}</span><br>'
 
-if content:
-    send_email("RSI/布林警報", content)
+
+if content_html:
+    send_email("RSI/布林警報", content_html)
+
