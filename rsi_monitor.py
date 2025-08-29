@@ -16,6 +16,35 @@ stock_list = [
 ]
 rsi_days = 14
 
+# 股票代號與中文名稱對應表
+stock_name_map = {
+    "1326.TW": "台化",
+    "2904.TW": "匯僑",
+    "2414.TW": "精技",
+    "2330.TW": "台積電",
+    "2317.TW": "鴻海",
+    "2376.TW": "技嘉",
+    "6216.TW": "居易",
+    "0050.TW": "元大台灣50",
+    "0056.TW": "元大高股息",
+    "00919.TW": "群益台灣精選高息",
+    "00875.TW": "國泰永續高股息",
+    "QQQ": "Invesco QQQ",
+    "SPY": "SPDR S&P 500",
+    "VTI": "Vanguard Total Stock Mkt",
+    "AAPL": "Apple",
+    "TSLA": "Tesla",
+    "NVDA": "NVIDIA",
+    "AMZN": "Amazon",
+    "NFLX": "Netflix",
+    "MSFT": "Microsoft",
+    "AAL": "American Airlines",
+    "T": "AT&T",
+    "COST": "Costco",
+    "CELH": "Celsius",
+    "O": "Realty Income"
+}
+
 def get_indicators(symbol, rsi_period=14, bb_period=20, bb_std=2):
     data = yf.download(symbol, period='60d', interval='1d')
     # 防止多層DataFrame，取正確symbol資料
@@ -27,7 +56,6 @@ def get_indicators(symbol, rsi_period=14, bb_period=20, bb_std=2):
         raise ValueError("無法取得收盤價資料")
     last_date = close.index[-1].strftime('%Y-%m-%d')
     last_close = float(close.iloc[-1])
-    from ta.momentum import RSIIndicator
     rsi = RSIIndicator(close, window=rsi_period).rsi()
     last_rsi = float(rsi.dropna().values[-1])
     ma = close.rolling(window=bb_period).mean()
@@ -35,7 +63,6 @@ def get_indicators(symbol, rsi_period=14, bb_period=20, bb_std=2):
     upper = float(ma.iloc[-1] + bb_std * std.iloc[-1])
     lower = float(ma.iloc[-1] - bb_std * std.iloc[-1])
     return last_rsi, last_date, last_close, upper, lower
-
 
 def send_email(subject, body):
     to_emails = [your_email]
@@ -53,8 +80,13 @@ content = ""
 for stock in stock_list:
     try:
         rsi_val, last_date, last_close, bb_upper, bb_lower = get_indicators(stock, rsi_days)
-        message = f"{stock} 收盤日: {last_date} 收盤價: {last_close:.2f} "
-        # 僅當RSI 低於30觸發
+        stock_name = stock_name_map.get(stock, "")
+        if stock_name:
+            stock_display = f"{stock} ({stock_name})"
+        else:
+            stock_display = stock
+        message = f"{stock_display} 收盤日: {last_date} 收盤價: {last_close:.2f} "
+        # 僅當RSI 低於40觸發
         if rsi_val <= 40:
             content += f"{message}RSI={rsi_val:.2f} 低於40\n"
         # 僅當收盤價低於布林下軌
@@ -64,7 +96,12 @@ for stock in stock_list:
         if last_close >= bb_upper:
             content += f"{message}高於布林上軌({bb_upper:.2f})\n"
     except Exception as e:
-        content += f"{stock} 無法取得資料或計算錯誤: {e}\n"
+        stock_name = stock_name_map.get(stock, "")
+        if stock_name:
+            stock_display = f"{stock} ({stock_name})"
+        else:
+            stock_display = stock
+        content += f"{stock_display} 無法取得資料或計算錯誤: {e}\n"
 
 if content:
     send_email("RSI/布林警報", content)
