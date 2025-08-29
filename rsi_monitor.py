@@ -10,7 +10,7 @@ your_email = "mingsyunapp@gmail.com"
 cc_emails = ["mingsyun@hotmail.com"]
 app_password = os.environ.get('GMAIL_APP_PASSWORD')
 
-# 股票代號與名稱直接一組
+# 股票代號與名稱直接一組   https://finance.yahoo.com/quote/1295.TWO/
 stock_targets = [
     ("1326.TW", "台化"),
     ("2904.TW", "匯僑"),
@@ -25,8 +25,8 @@ stock_targets = [
     ("2887.TW", "台新金"),
     ("2891.TW", "中信金"),
     ("2904.TW", "匯僑"),
-    ("3211.TW", "順達"),
-    ("6101.TW", "寬魚國際_出"),
+    ("3211.TWO", "順達"),
+    ("6101.TWO", "寬魚國際_出"),
     ("6189.TW", "豐藝"),
     ("6216.TW", "居易"),
     ("0050.TW", "元大台灣50_低買"),
@@ -34,9 +34,9 @@ stock_targets = [
     ("00919.TW", "群益台灣精選高息_低買"),
     ("00875.TW", "國泰網路資安"),
     ("009802.TW","富邦旗艦50"),
-    ("00942B.TW","台新美A公司債"),
+    ("00942B.TWO","台新美A公司債"),
     ("2308.TW", "台達電_無"),
-    ("1295.TW", "生合生技_益生菌.增肌減脂"),
+    ("1295.TWO", "生合生技_益生菌.增肌減脂"),
     ("AAL", "American Airlines"),
     ("AAPL", "Apple"),
     ("AMZN", "Amazon"),
