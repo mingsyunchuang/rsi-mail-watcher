@@ -49,7 +49,7 @@ stock_targets = [
     ("SPY", "SPDR S&P 500"),
     ("T", "AT&T"),
     ("TSLA", "Tesla"),
-    ("ZIM", "乙星航運"),
+    ("ZIM", "以星航運"),
     ("VTI", "Vanguard Total Stock Mkt"),
     ("MSFT", "Microsoft"),
     ("COST", "Costco"),
